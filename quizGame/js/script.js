@@ -17,16 +17,16 @@
           // Add a radio button
           answers.push(
             `<label>
-              <input type="radio" name="question${questionNumber}" value="${letter}">
+              &emsp;&emsp; <input type="radio" name="question${questionNumber}" value="${letter}">
               ${letter} :
               ${currentQuestion.answers[letter]}
-            </label>`
+            </label><br>`
           );
         }
 
         output.push(
           `<div class="slide">
-            <div class="question"> ${currentQuestion.question} </div>
+            <div class="question"> &ensp; ${currentQuestion.question} </div>
             <div class="answers"> ${answers.join("")} </div>
           </div>`
         );
@@ -66,17 +66,16 @@
     pages[currentPage].classList.remove('active-page');
     pages[n].classList.add('active-page');
     currentPage = n;
-    if(currentPage === 0){
+    if (currentPage === 0) {
       previousButton.style.display = 'none';
-    }
-    else{
+    } else {
       previousButton.style.display = 'inline-block';
     }
-    if(currentPage === pages.length-1){
+    if (currentPage === pages.length-1) {
+      previousButton.style.display = 'none';
       nextButton.style.display = 'none';
       submitButton.style.display = 'inline-block';
-    }
-    else{
+    } else {
       nextButton.style.display = 'inline-block';
       submitButton.style.display = 'none';
     }
@@ -133,7 +132,9 @@
   const previousButton = document.getElementById("previous");
   const nextButton = document.getElementById("next");
   const pages = document.querySelectorAll(".slide");
-  let currentPage = 0;
+ // let currentPage = 0;
+  let currentPage = pages.length-1;
+//    if (currentPage === pages.length-1) {
 
   // Show the opening page
   showPage(currentPage);
