@@ -1,146 +1,101 @@
-(function(){
-  
-  
-  function beginQuiz(){
-    // Store the HTML output
-    const output = [];
+var maxScore = 3;
+var minScore = -3;
+var questionDiv = document.getElementById("question");
+var choicesDiv = document.getElementById("choices");
 
-    questionSet.forEach(
-      (currentQuestion, questionNumber) => {
+const startButton = document.getElementById("start");
+startButton.addEventListener("click", start);
+const submitButton = document.getElementById("submit");
+submitButton.style.display = "none";
+submitButton.addEventListener("click", checkAnswer);
 
-        // List of possible answers
-        const answers = [];
+var questions = window.questions;
+var questionIndex;
 
-        // For each answer
-        for(letter in currentQuestion.answers){
+function start() {
+  // update buttons
+  document.getElementById("start").textContent = "New game";
+  startButton.style.display = "none";
+  submitButton.style.display = "inline-block";
 
-          // Add a radio button
-          answers.push(
-            `<label>
-              &emsp;&emsp; <input type="radio" name="question${questionNumber}" value="${letter}">
-              ${letter} :
-              ${currentQuestion.answers[letter]}
-            </label><br>`
-          );
-        }
+  score = 0;
+  shuffle(questions);
+  questionIndex = 0;
 
-        output.push(
-          `<div class="slide">
-            <div class="question"> &ensp; ${currentQuestion.question} </div>
-            <div class="answers"> ${answers.join("")} </div>
-          </div>`
-        );
-      }
+  displayQuestion();
+}
+
+function displayQuestion() {
+  const choices = [];
+  const currentQuestion = questions[questionIndex];
+
+  // Shuffle answer choices without changing order of currentQuestion[choices]
+  let choiceIndices = [...Array(currentQuestion.choices.length).keys()];
+  shuffle(choiceIndices);
+
+  // Add radio button for each answer choice
+  for (let i = 0; i < choiceIndices.length; i++) {
+    let choice = choiceIndices[i];
+    choices.push(
+      `<label>
+        <input type="radio" name="question${questionIndex}" value="${choice}">
+        ${String.fromCharCode('a'.charCodeAt(0)+i)}.
+        ${currentQuestion.choices[choice]}
+      </label>`
     );
-
-    // finally combine output list into one string of HTML and put it on the page
-    quizContainer.innerHTML = output.join('');
   }
-
-  function showResults(){
-
-    const answerContainers = quizContainer.querySelectorAll('.answers');
-
-    let numCorrect = 0;
-
-    questionSet.forEach( (currentQuestion, questionNumber) => {
-
-      const answerContainer = answerContainers[questionNumber];
-      const selector = `input[name=question${questionNumber}]:checked`;
-      const userAnswer = (answerContainer.querySelector(selector) || {}).value;
-
-      if(userAnswer === currentQuestion.correctAnswer){
-        numCorrect++;
-        answerContainers[questionNumber].style.color = 'lightgreen';
-      }
-      // If answer is wrong or blank
-      else{
-        answerContainers[questionNumber].style.color = 'red';
-      }
-    });
-
-    resultsContainer.innerHTML = `${numCorrect} out of ${questionSet.length}`;
-  }
-
-  function showPage(n) {
-    pages[currentPage].classList.remove('active-page');
-    pages[n].classList.add('active-page');
-    currentPage = n;
-    if (currentPage === 0) {
-      previousButton.style.display = 'none';
-    } else {
-      previousButton.style.display = 'inline-block';
-    }
-    if (currentPage === pages.length-1) {
-      previousButton.style.display = 'none';
-      nextButton.style.display = 'none';
-      submitButton.style.display = 'inline-block';
-    } else {
-      nextButton.style.display = 'inline-block';
-      submitButton.style.display = 'none';
-    }
-  }
-
-  function showNextPage() {
-    showPage(currentPage + 1);
-  }
-
-  function showPreviousPage() {
-    showPage(currentPage - 1);
-  }
-
-  const quizContainer = document.getElementById('quiz');
-  const resultsContainer = document.getElementById('results');
-  const submitButton = document.getElementById('submit');
   
-  // src of questions - https://www.cellsalive.com/quiz1.htm
-  const questionSet = [
-    {
-      question: "Name the membrane valves that open and close for potassium efflux and sodium influx.",
-      answers: {
-        a: "Ion channels",
-        b: "Vacuoles",
-        c: "Capillaries",
-      },
-      correctAnswer: "a"
-    },
-    {
-      question: "What is another name for programmed cell death?",
-      answers: {
-        a: "Necrosis",
-        b: "Oxidative burst",
-        c: "Apoptosis"
-      },
-      correctAnswer: "c"
-    },
-    {
-      question: "When a sodium channel opens and sodium rushes into a myocyte (heart cell), the cell membrane becomes...",
-      answers: {
-        a: "Polarized",
-        b: "Depolarized",
-        c: "Paralyzed"
-      },
-      correctAnswer: "b"
-    }
-  ];
+  questionDiv.textContent = `${currentQuestion.question}`;
+  choicesDiv.innerHTML = `${choices.join("")}`;
+}
 
-  // Start quiz
-  beginQuiz();
+// scores current question and then moves onto the next one or ends the game
+function checkAnswer() {
+  const currentQuestion = questions[questionIndex];
+  const correctChoice = currentQuestion["choices"][0];
+  const selector = document.querySelector(`input[name=question${questionIndex}]:checked`);
+  let userAnswer = "";
+  if (selector !== null)
+    userAnswer = currentQuestion["choices"][selector.value];
 
-  // Below part is for converting into different pages
+  if (userAnswer === correctChoice) {
+    swal("Correct!", `${currentQuestion.explanation}`, "success");
+    score ++;
+  } else {
+    swal("Incorrect", `${currentQuestion.explanation}`, "warning");
+    score --;
+  }
+  console.log(`Score is now ${score}`);
   
-  const previousButton = document.getElementById("previous");
-  const nextButton = document.getElementById("next");
-  const pages = document.querySelectorAll(".slide");
- // let currentPage = 0;
-  let currentPage = pages.length-1;
-//    if (currentPage === pages.length-1) {
+  // TODO: add animation and display for score
 
-  // Show the opening page
-  showPage(currentPage);
+  if (score == maxScore || score == minScore) { // terminate game upon reaching a certain score
+    endGame();
+    return;
+  }
 
-  // Added Event listeners
-  submitButton.addEventListener('click', showResults);
-  previousButton.addEventListener("click", showPreviousPage);
-  nextButton.addEventListener("click", showNextPage);
-})();
+  questionIndex = (questionIndex + 1) % questions.length;
+  displayQuestion();
+}
+
+function endGame() {
+  if (score == maxScore) {
+    console.log("Game won!");
+    // TODO: add win event/animation
+  } else {
+    console.log("Game lost.");
+    // TODO: add lose event/animation
+  }
+
+  // update buttons
+  startButton.style.display = "inline-block";
+  submitButton.style.display = "none";
+}
+
+// helper to randomly permute an array
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}

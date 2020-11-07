@@ -73,12 +73,12 @@ button:hover {
   font-size: 24px;
   margin-bottom: 10px;
 }
-.answers {
+.choices {
   margin-bottom: 20px;
   text-align: left;
   display: inline-block;
 }
-.answers label{
+.choices label{
   display: block;
   margin-bottom: 10px;
 }
