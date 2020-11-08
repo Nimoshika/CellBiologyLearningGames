@@ -37,5 +37,4 @@ window.questions = [
     choices: ["Cytosol", "Organelle", "Nucleus"],
     explanation: "Cytosol is the name of gel-like fluid that fills the cell, holds organelles in place, and aids in waste break down and energy transformation (metabolism) "
   },
-
 ];
