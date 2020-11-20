@@ -2,25 +2,40 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="css/stylesheet.css?v=1.0.1" />
     <link rel="stylesheet" type="text/css" href="css/sweetalert2.min.css" />
+	<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js"></script>
   </head>
   <body>
     <div class="wrapper container">
       <h1>Quiz Game</h1>
       <p>Answer questions correctly to win!</p>
     </div>
-<!--	<div class="question-container">
-		<div id="quiz"></div>
-	</div> -->
     <div class="question-container">
       <div class="question", id="question"> </div>
       <div class="choices", id="choices"> </div>
     </div>
     <button id="start">Start</button>
     <button id="submit", style="none">Submit answer</button>
+
+
+      <div class="ruler_container">
+        <div class="ruler" id="ruler_id">
+          <div class="ruler-cell" id="ruler_cell_id">
+            <img src="img/smiley.png" id="smiley">
+            <span class="minus3">-3</span>
+            <span class="minus2">-2</span>
+            <span class="minus1">-1</span>
+            <span class="zero">0</span>
+            <span class="plus1">+1</span>
+            <span class="plus2">+2</span>
+            <span class="plus3">+3</span>
+          </div>
+        </div>
+      </div>
 	
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery-ui.min.js"></script>
@@ -30,6 +45,5 @@
     <script type="text/javascript" src="js/sweetalert2.min.js"></script>
     <script type "text/javascript" src="js/script.js"></script>
     <script type "text/javascript" src="js/game_data.js"></script>
-<!--    <script src="js/script.js"></script> -->
   </body>
 </html>

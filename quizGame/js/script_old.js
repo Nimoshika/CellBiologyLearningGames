@@ -23,17 +23,9 @@ yaySound.src = "sound/yay.mp3";
 var noSound = new Audio();
 noSound.src = "sound/no.mp3";
 
-var winSound = new Audio();
-winSound.src = "sound/Win.wav";
-
-var GameoverSound = new Audio();
-GameoverSound.src = "sound/Gameover.wav";
-
-
-
 function start() {
   // update buttons and images
-  document.getElementById("start").textContent = "New Game";
+  document.getElementById("start").textContent = "New game";
   startButton.style.display = "none";
   submitButton.style.display = "inline-block";
   happyImage1.style.display = "";
@@ -87,22 +79,13 @@ function checkAnswer() {
     score ++;
     movePlayerForward();
   } else {
-    noSound.play();
     swal("Incorrect", `${currentQuestion.explanation}`, "warning");
     score --;
     movePlayerBackward();
   }
   console.log(`Score is now ${score}`);
   
-  if (score == maxScore) { // terminate game upon reaching a certain score
-    swal("Congratulations! \n you won! \n Try a new game again");
-    endGame();
-    return;
-  }
-
-  if (score == minScore) {
-    GameoverSound.play();
-    swal("Game Over! \n Try a new game");
+  if (score == maxScore || score == minScore) { // terminate game upon reaching a certain score
     endGame();
     return;
   }
@@ -121,6 +104,7 @@ function movePlayerForward(){
   console.log(happyImage1.style.marginLeft);
 }
 function movePlayerBackward(){
+  noSound.play();
   step_size= happyImage1.parentElement.clientWidth * 0.322;
   left = score * step_size;
   console.log(window.screen.height);
@@ -131,7 +115,6 @@ function movePlayerBackward(){
 
 function endGame() {
   if (score == maxScore) {
-    winSound.play();
     console.log("Game won!");
     // TODO: add win event/animation
   } else {
